@@ -4,6 +4,7 @@ namespace GtkSharp.Mvvm
     {
         private string text = "asdf";
         private int counter = 0;
+        private string entry = string.Empty;
 
         public string Text
         {
@@ -21,6 +22,12 @@ namespace GtkSharp.Mvvm
                     this.Text = $"Counter changed to {value}";
                 }
             }
+        }
+
+        public string Entry
+        {
+            get => entry;
+            set => Set(ref entry, value);
         }
     }
 }
