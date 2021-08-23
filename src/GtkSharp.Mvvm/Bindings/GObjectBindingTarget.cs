@@ -42,8 +42,13 @@ namespace GtkSharp.Mvvm.Bindings
                 throw new InvalidOperationException("Cannot connect twice.");
             }
 
+            if (!this.CanTrack)
+            {
+                throw new InvalidOperationException("Cannot connect to an untrackable property.");
+            }
+
             this.connected = true;
-            this.target.AddNotification(this.HandleNotification);
+            this.target.AddNotification(this.attribute.Name, this.HandleNotification);
         }
 
         public void Disconnect()
@@ -54,7 +59,7 @@ namespace GtkSharp.Mvvm.Bindings
             }
 
             this.connected = false;
-            this.target.RemoveNotification(this.HandleNotification);
+            this.target.RemoveNotification(this.attribute.Name, this.HandleNotification);
         }
 
         public object GetValue()
@@ -99,12 +104,9 @@ namespace GtkSharp.Mvvm.Bindings
 
         private void HandleNotification(object o, GLib.NotifyArgs args)
         {
-            if (args.Property == this.propertyName)
+            foreach (var subscription in this.subscriptions)
             {
-                foreach (var subscription in this.subscriptions)
-                {
-                    subscription(this.GetValue());
-                }
+                subscription(this.GetValue());
             }
         }
     }
