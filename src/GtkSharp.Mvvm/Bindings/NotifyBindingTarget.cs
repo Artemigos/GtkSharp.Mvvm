@@ -31,6 +31,8 @@ namespace GtkSharp.Mvvm.Bindings
             }
         }
 
+        public bool CanTrack => true;
+
         public void Connect()
         {
             if (this.connected)

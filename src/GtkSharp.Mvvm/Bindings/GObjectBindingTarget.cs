@@ -31,11 +31,9 @@ namespace GtkSharp.Mvvm.Bindings
             }
 
             this.attribute = this.property.GetCustomAttribute<GLib.PropertyAttribute>();
-            if (this.attribute is null)
-            {
-                throw new ArgumentException("Property is not marked with PropertyAttribute");
-            }
         }
+
+        public bool CanTrack => this.attribute is not null;
 
         public void Connect()
         {

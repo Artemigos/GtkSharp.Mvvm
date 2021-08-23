@@ -11,5 +11,6 @@ namespace GtkSharp.Mvvm.Bindings
         void Subscribe(Action<object> handler);
         void Unsubscribe(Action<object> handler);
         bool IsDependentOn(object dependency);
+        bool CanTrack { get; }
     }
 }
