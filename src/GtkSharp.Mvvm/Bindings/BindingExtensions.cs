@@ -17,8 +17,8 @@ namespace GtkSharp.Mvvm.Bindings
             BindingConverter convert = null,
             BindingConverter convertBack = null)
         {
-            convert ??= (convertBack == null ? (x => x) : (_ => throw new NotSupportedException()));
-            convertBack ??= (convert == null ? (x => x) : (_ => throw new NotSupportedException()));
+            convert ??= (x => x);
+            convertBack ??= (x => x);
             var definition = new BindingDefinition(source, target, mode, convert, convertBack);
             BindingsEngine.Attach(definition);
             return definition;
