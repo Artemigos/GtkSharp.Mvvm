@@ -25,7 +25,7 @@ namespace GtkSharp.Mvvm.Bindings
             this.subscriptions = new List<Action<object>>();
 
             this.property = target.GetType().GetProperty(propertyName);
-            if (this.property == null)
+            if (this.property is null)
             {
                 throw new ArgumentException("Property does not exist on target.", nameof(propertyName));
             }
@@ -60,6 +60,11 @@ namespace GtkSharp.Mvvm.Bindings
 
         public bool IsDependentOn(object dependency)
         {
+            if (dependency is null)
+            {
+                throw new ArgumentNullException(nameof(dependency));
+            }
+
             return ReferenceEquals(dependency, this.target);
         }
 
@@ -70,11 +75,21 @@ namespace GtkSharp.Mvvm.Bindings
 
         public void Subscribe(Action<object> handler)
         {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             this.subscriptions.Add(handler);
         }
 
         public void Unsubscribe(Action<object> handler)
         {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
             this.subscriptions.Remove(handler);
         }
 
