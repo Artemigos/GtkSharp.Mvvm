@@ -1,6 +1,6 @@
 using System;
 using Gtk;
-using GtkTest;
+using GtkSharp.Mvvm.Bindings;
 using UI = Gtk.Builder.ObjectAttribute;
 
 namespace GtkSharp.Mvvm
