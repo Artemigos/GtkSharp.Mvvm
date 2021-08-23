@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace GtkSharp.Mvvm.Bindings
 {
@@ -60,7 +61,17 @@ namespace GtkSharp.Mvvm.Bindings
 
         public static string GetPropertyName<TTarget, TValue>(Expression<Func<TTarget, TValue>> selector)
         {
-            throw new NotImplementedException();
+            if (selector.Body is MemberExpression mem)
+            {
+                if (mem.Member is PropertyInfo prop)
+                {
+                    return prop.Name;
+                }
+
+                throw new NotSupportedException("Only property members are supported.");
+            }
+
+            throw new NotSupportedException("Only direct member expressions are supported.");
         }
     }
 }
