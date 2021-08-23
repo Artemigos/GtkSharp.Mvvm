@@ -16,6 +16,16 @@ namespace GtkSharp.Mvvm.Bindings
             Mode = mode;
             Convert = convert ?? throw new ArgumentNullException(nameof(convert));
             ConvertBack = convertBack ?? throw new ArgumentNullException(nameof(convertBack));
+
+            if ((mode == BindingMode.TwoWay || mode == BindingMode.OneWay) && !source.CanTrack)
+            {
+                throw new ArgumentException($"Cannot bind with binding mode {mode} when source can't be tracked");
+            }
+
+            if ((mode == BindingMode.TwoWay || mode == BindingMode.OneWayToSource) && !target.CanTrack)
+            {
+                throw new ArgumentException($"Cannot bind with binding mode {mode} when target can't be tracked");
+            }
         }
 
         public IBindingTarget Source { get; }
