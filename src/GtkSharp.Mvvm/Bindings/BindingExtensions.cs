@@ -32,7 +32,7 @@ namespace GtkSharp.Mvvm.Bindings
             BindingConverter convert = null,
             BindingConverter convertBack = null)
         {
-            return target.To(source.Bind(propertyName));
+            return target.To(source.Bind(propertyName), mode, convert, convertBack);
         }
 
         public static BindingDefinition To<TSource, TValue>(
@@ -44,7 +44,7 @@ namespace GtkSharp.Mvvm.Bindings
             BindingConverter convertBack = null)
             where TSource : INotifyPropertyChanged
         {
-            return target.To(source.Bind(selector));
+            return target.To(source.Bind(selector), mode, convert, convertBack);
         }
 
         public static IBindingTarget Bind(this INotifyPropertyChanged target, string propertyName)
