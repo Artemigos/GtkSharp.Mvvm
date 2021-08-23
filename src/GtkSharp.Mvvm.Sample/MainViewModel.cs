@@ -14,7 +14,13 @@ namespace GtkSharp.Mvvm
         public int Counter
         {
             get => counter;
-            set => Set(ref counter, value);
+            set
+            {
+                if (Set(ref counter, value))
+                {
+                    this.Text = $"Counter changed to {value}";
+                }
+            }
         }
     }
 }
