@@ -32,15 +32,24 @@ namespace GtkSharp.Mvvm.Bindings
             if (binding.Mode == BindingMode.OneWay || binding.Mode == BindingMode.TwoWay)
             {
                 binding.Source.Connect();
-                data.SourceHandler = obj => binding.Target.SetValue(binding.Convert(obj));
+                data.SourceHandler = obj => PropagateValueToTarget(binding, obj);
                 binding.Source.Subscribe(data.SourceHandler);
             }
 
             if (binding.Mode == BindingMode.OneWayToSource || binding.Mode == BindingMode.TwoWay)
             {
                 binding.Target.Connect();
-                data.TargetHandler = obj => binding.Source.SetValue(binding.ConvertBack(obj));
+                data.TargetHandler = obj => PropagateValueToSource(binding, obj);
                 binding.Target.Subscribe(data.TargetHandler);
+            }
+
+            if (binding.Mode == BindingMode.OneWayToSource)
+            {
+                PropagateValueToSource(binding, binding.Target.GetValue());
+            }
+            else
+            {
+                PropagateValueToTarget(binding, binding.Source.GetValue());
             }
         }
 
@@ -73,6 +82,53 @@ namespace GtkSharp.Mvvm.Bindings
                 .Where(x => x.Source.IsDependentOn(target) || x.Target.IsDependentOn(target))
                 .ToList() // evaluate to avoid modifying source collection while enumerating
                 .ForEach(Detach);
+        }
+
+        private static void PropagateValueToTarget(BindingDefinition definition, object value)
+        {
+            try
+            {
+                value = definition.Convert(value);
+            }
+            catch (Exception e)
+            {
+                Error("Failed to convert value", definition, e);
+            }
+
+            try
+            {
+                definition.Target.SetValue(value);
+            }
+            catch (Exception e)
+            {
+                Error("Failed to set value to target", definition, e);
+            }
+        }
+
+        private static void PropagateValueToSource(BindingDefinition definition, object value)
+        {
+            try
+            {
+                value = definition.ConvertBack(value);
+            }
+            catch (Exception e)
+            {
+                Error("Failed to convert value back", definition, e);
+            }
+
+            try
+            {
+                definition.Source.SetValue(value);
+            }
+            catch (Exception e)
+            {
+                Error("Failed to set value to source", definition, e);
+            }
+        }
+
+        private static void Error(string message, BindingDefinition definition, Exception exception = null)
+        {
+            BindingError?.Invoke(null, new BindingErrorEventArgs(message, definition, exception));
         }
 
         private class BindingRuntimeData

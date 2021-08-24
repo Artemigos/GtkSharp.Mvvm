@@ -4,7 +4,7 @@ namespace GtkSharp.Mvvm
     {
         private string text = "asdf";
         private int counter = 0;
-        private string entry = string.Empty;
+        private string entry = "inital";
 
         public string Text
         {
