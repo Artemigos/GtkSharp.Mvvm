@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using System.Windows.Input;
 
 namespace GtkSharp.Mvvm.Bindings
 {
@@ -41,6 +42,25 @@ namespace GtkSharp.Mvvm.Bindings
         {
             var name = BindingExtensions.GetPropertyName(selector);
             return target.Bind(name);
+        }
+
+        public static void BindCommand(this Gtk.Button button, ICommand command)
+        {
+            if (command is null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            // TODO: this is just to make it work, it should be possible to clean it up just like bindings
+
+            button.Sensitive = command.CanExecute(null);
+            command.CanExecuteChanged += (sender, args) => button.Sensitive = command.CanExecute(null);
+
+            button.Clicked += (sender, args) =>
+            {
+                if (command.CanExecute(null))
+                    command.Execute(null);
+            };
         }
     }
 }

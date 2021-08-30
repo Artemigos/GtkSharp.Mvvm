@@ -3,8 +3,10 @@ using Gtk;
 
 namespace GtkSharp.Mvvm.Sample
 {
-    class Program
+    public class Program
     {
+        public static bool UseBindingLibrary => true;
+
         [STAThread]
         public static void Main(string[] args)
         {
