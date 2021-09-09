@@ -3,7 +3,8 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using Gtk;
-using GtkSharp.Mvvm.Bindings;
+using GtkSharp.Mvvm.Bindings.Attempt3;
+using GtkSharp.Mvvm.Observable;
 
 namespace GtkSharp.Mvvm.Sample
 {
@@ -31,15 +32,28 @@ namespace GtkSharp.Mvvm.Sample
             {
                 #region BINDINGS IN USER CODE
 
-                counterLabel.Bind(x => x.Text).To(viewModel, x => x.Text);
-                validatedEntry.Bind(x => x.Text).To(viewModel, x => x.Entry, BindingMode.TwoWay);
-                entryRepeatLabel.Bind(x => x.Text).To(viewModel, x => x.Entry);
-                plus.BindCommand(viewModel.IncrementCounter);
-                minus.BindCommand(viewModel.DecrementCounter);
-                errorInfoLabel.Bind(nameof(Label.Markup)).ToErrors(
-                    viewModel,
-                    x => x.Entry,
-                    errs => "<span foreground='red'>" + string.Join("\n", errs.Cast<string>()) + "</span>");
+                viewModel.Bind(x => x.Entry).Subscribe(val =>
+                {
+                    validatedEntry.Text = val;
+                    entryRepeatLabel.Text = val;
+                }).AttachToWidgetLifetime(this);
+
+                // viewModel.Track(x => x.Entry).Do(x =>
+                // {
+                //     validatedEntry.Text = x;
+                //     entryRepeatLabel.Text = x;
+                // });
+                // validatedEntry.Track(x => x.Text).Do(x => viewModel.Entry = x);
+
+                // counterLabel.Bind(x => x.Text).To(viewModel, x => x.Text);
+                // validatedEntry.Bind(x => x.Text).To(viewModel, x => x.Entry, BindingMode.TwoWay);
+                // entryRepeatLabel.Bind(x => x.Text).To(viewModel, x => x.Entry);
+                // plus.BindCommand(viewModel.IncrementCounter);
+                // minus.BindCommand(viewModel.DecrementCounter);
+                // errorInfoLabel.Bind(nameof(Label.Markup)).ToErrors(
+                //     viewModel,
+                //     x => x.Entry,
+                //     errs => "<span foreground='red'>" + string.Join("\n", errs.Cast<string>()) + "</span>");
 
                 #endregion
             }
