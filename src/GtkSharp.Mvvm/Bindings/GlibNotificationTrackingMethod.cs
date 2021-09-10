@@ -1,12 +1,11 @@
 using System;
-using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using GtkSharp.Mvvm.Observable;
 
 namespace GtkSharp.Mvvm.Bindings
 {
-    public class PropertyChangedTrackingMethod : TrackingMethodBase
+    public class GlibNotificationTrackingMethod : TrackingMethodBase
     {
         public override bool CanTrack(Expression expression)
         {
@@ -25,7 +24,13 @@ namespace GtkSharp.Mvvm.Bindings
                 return false;
             }
 
-            if (!typeof(INotifyPropertyChanged).IsAssignableFrom(mem.Expression.Type))
+            if (!typeof(GLib.Object).IsAssignableFrom(mem.Expression.Type))
+            {
+                return false;
+            }
+
+            var attr = prop.GetCustomAttribute<GLib.PropertyAttribute>();
+            if (attr is null)
             {
                 return false;
             }
@@ -51,15 +56,16 @@ namespace GtkSharp.Mvvm.Bindings
         }
 
         private IObservable<TResult> TrackTyped<TSource, TResult>(TSource source, Expression expression)
-            where TSource : INotifyPropertyChanged
+            where TSource : GLib.Object
         {
             var mem = (MemberExpression)expression;
             var prop = (PropertyInfo)mem.Member;
+            var attr = prop.GetCustomAttribute<GLib.PropertyAttribute>();
             var par = Expression.Parameter(typeof(TSource));
             var newMem = Expression.Property(par, prop);
             var lambda = Expression.Lambda<Func<TSource, TResult>>(newMem, par).Compile();
 
-            return new PropertyChangeObservable<TSource, TResult>(source, lambda, prop.Name);
+            return new GlibNotificationObservable<TSource,TResult>(source, lambda, attr.Name);
         }
     }
 }

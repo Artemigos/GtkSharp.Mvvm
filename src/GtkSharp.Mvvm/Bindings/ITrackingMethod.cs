@@ -7,6 +7,7 @@ namespace GtkSharp.Mvvm.Bindings
     {
         bool CanTrack(Expression expression);
         Expression GetInnerExpression(Expression expression);
-        IObservable<object> Track(object source, Expression expression);
+        Expression CreateSimpleGet(Expression expression, Expression getFrom);
+        object Track(object source, Expression expression);
     }
 }

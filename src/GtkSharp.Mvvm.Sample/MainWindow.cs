@@ -32,11 +32,45 @@ namespace GtkSharp.Mvvm.Sample
             {
                 #region BINDINGS IN USER CODE
 
-                viewModel.Bind(x => x.Entry).Subscribe(val =>
+                viewModel.ObservePath(x => x.Text)
+                    .Subscribe(val => counterLabel.Text = val)
+                    .AttachToWidgetLifetime(this);
+
+                viewModel.ObservePath(x => x.Entry).Subscribe(val =>
                 {
                     validatedEntry.Text = val;
                     entryRepeatLabel.Text = val;
                 }).AttachToWidgetLifetime(this);
+
+                validatedEntry.ObservePath(x => x.Text)
+                    .Subscribe(val => viewModel.Entry = val)
+                    .AttachToWidgetLifetime(this);
+
+                viewModel.ObservePath(x => x.IncrementCounter.CanExecute(null))
+                    .Subscribe(val => plus.Sensitive = val)
+                    .AttachToWidgetLifetime(this);
+
+                plus.Clicked += (_, _) =>
+                {
+                    var cmd = viewModel.IncrementCounter;
+                    if (cmd.CanExecute(null))
+                        cmd.Execute(null);
+                };
+
+                viewModel.ObservePath(x => x.DecrementCounter.CanExecute(null))
+                    .Subscribe(val => minus.Sensitive = val)
+                    .AttachToWidgetLifetime(this);
+
+                minus.Clicked += (_, _) =>
+                {
+                    var cmd = viewModel.DecrementCounter;
+                    if (cmd.CanExecute(null))
+                        cmd.Execute(null);
+                };
+
+                viewModel.ObservePath(x => x.GetErrors(nameof(viewModel.Entry)))
+                    .Subscribe(val => errorInfoLabel.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>")
+                    .AttachToWidgetLifetime(this);
 
                 // viewModel.Track(x => x.Entry).Do(x =>
                 // {
