@@ -51,32 +51,32 @@ namespace GtkSharp.Mvvm.Bindings.Attempt3
         private static LambdaExpression BuildTrackingLambda(Type itemType, Expression getter, ITrackingMethod method)
         {
             // for generic types TSource, TResult, this creates a lambda equivalent to:
-            // TSource x => ((IObservable<TResult>)method.Track(x, getter)).ResendLastOnSubscribe(x != null ? [getter(x)] : default)
+            // TSource x => x != null ? ((IObservable<TResult>)method.Track(x, getter)).ResendLastOnSubscribe([getter(x)]) : default
 
             var resultType = getter.Type;
+            var resultObservableType = typeof(IObservable<>).MakeGenericType(resultType);
             ParameterExpression par = Expression.Parameter(itemType);
             var simpleGetter = method.CreateSimpleGet(getter, par);
-            var currentValueGetter = Expression.Condition(
-                Expression.NotEqual(par, Expression.Constant(null)),
-                simpleGetter,
-                Expression.Default(simpleGetter.Type)
-            );
             return Expression.Lambda(
-                Expression.Call(
-                    null,
-                    typeof(ObservableExtensions)
-                        .GetMethod(nameof(ObservableExtensions.ResendLastOnSubscribe))
-                        .MakeGenericMethod(resultType),
-                    Expression.Convert(
-                        Expression.Call(
-                            Expression.Constant(method),
-                            typeof(ITrackingMethod).GetMethod(nameof(method.Track)),
-                            par,
-                            Expression.Constant(getter)
+                Expression.Condition(
+                    Expression.NotEqual(par, Expression.Constant(null)),
+                    Expression.Call(
+                        null,
+                        typeof(ObservableExtensions)
+                            .GetMethod(nameof(ObservableExtensions.ResendLastOnSubscribe))
+                            .MakeGenericMethod(resultType),
+                        Expression.Convert(
+                            Expression.Call(
+                                Expression.Constant(method),
+                                typeof(ITrackingMethod).GetMethod(nameof(method.Track)),
+                                par,
+                                Expression.Constant(getter)
+                            ),
+                            resultObservableType
                         ),
-                        typeof(IObservable<>).MakeGenericType(resultType)
+                        simpleGetter
                     ),
-                    currentValueGetter
+                    Expression.Default(resultObservableType)
                 ),
                 par
             );
