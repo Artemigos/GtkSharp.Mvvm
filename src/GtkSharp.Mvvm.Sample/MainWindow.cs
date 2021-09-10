@@ -72,23 +72,6 @@ namespace GtkSharp.Mvvm.Sample
                     .Subscribe(val => errorInfoLabel.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>")
                     .AttachToWidgetLifetime(this);
 
-                // viewModel.Track(x => x.Entry).Do(x =>
-                // {
-                //     validatedEntry.Text = x;
-                //     entryRepeatLabel.Text = x;
-                // });
-                // validatedEntry.Track(x => x.Text).Do(x => viewModel.Entry = x);
-
-                // counterLabel.Bind(x => x.Text).To(viewModel, x => x.Text);
-                // validatedEntry.Bind(x => x.Text).To(viewModel, x => x.Entry, BindingMode.TwoWay);
-                // entryRepeatLabel.Bind(x => x.Text).To(viewModel, x => x.Entry);
-                // plus.BindCommand(viewModel.IncrementCounter);
-                // minus.BindCommand(viewModel.DecrementCounter);
-                // errorInfoLabel.Bind(nameof(Label.Markup)).ToErrors(
-                //     viewModel,
-                //     x => x.Entry,
-                //     errs => "<span foreground='red'>" + string.Join("\n", errs.Cast<string>()) + "</span>");
-
                 #endregion
             }
             else
