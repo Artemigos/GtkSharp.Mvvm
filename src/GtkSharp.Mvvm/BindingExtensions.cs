@@ -13,11 +13,110 @@ namespace GtkSharp.Mvvm
 {
     public static class BindingExtensions
     {
+        public static IDisposable Bind<TSource, TValue, TWidget>(
+            this TWidget widget,
+            Expression<Func<TWidget, TValue>> widgetPropSelector,
+            TSource source,
+            Expression<Func<TSource, TValue>> selector)
+            where TWidget : Gtk.Widget
+        {
+            if (widget is null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (widgetPropSelector is null)
+            {
+                throw new ArgumentNullException(nameof(widgetPropSelector));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (widgetPropSelector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            {
+                throw new ArgumentException("Only simple property expressions are supported.", nameof(widgetPropSelector));
+            }
+
+            if (!prop.CanWrite)
+            {
+                throw new ArgumentException("The property doesn't have a setter.", nameof(widgetPropSelector));
+            }
+
+            if (mem.Expression is not ParameterExpression widg)
+            {
+                throw new ArgumentException("Only simple property expressions are supported.", nameof(widgetPropSelector));
+            }
+
+            var par = Expression.Parameter(typeof(TValue));
+            var setter = Expression.Lambda<Action<TValue, TWidget>>(
+                Expression.Assign(mem, par),
+                par, widg).Compile();
+
+            return widget.Bind(source, selector, setter);
+        }
+
+        public static IDisposable Bind<TSource, TValue, TWidget>(
+            this TWidget widget,
+            TSource source,
+            Expression<Func<TSource, TValue>> selector,
+            Action<TValue, TWidget> handler)
+            where TWidget : Gtk.Widget
+        {
+            if (widget is null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return source
+                .ObservePath(selector)
+                .Subscribe(val => handler(val, widget))
+                .AttachToWidgetLifetime(widget);
+        }
+
+
         public static IDisposable BindCommand<TSource>(
             this Button button,
             TSource source,
             Expression<Func<TSource, ICommand>> commandSelector)
         {
+            if (button is null)
+            {
+                throw new ArgumentNullException(nameof(button));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (commandSelector is null)
+            {
+                throw new ArgumentNullException(nameof(commandSelector));
+            }
+
             var commandObervable = source.ObservePath(commandSelector);
             var canExecuteBinding = commandObervable
                 .ObserveInnerProperty(x => x.CanExecute(null))

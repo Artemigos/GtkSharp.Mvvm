@@ -30,15 +30,9 @@ namespace GtkSharp.Mvvm.Sample
             {
                 #region BINDINGS IN USER CODE
 
-                viewModel.ObservePath(x => x.Text)
-                    .Subscribe(val => counterLabel.Text = val)
-                    .AttachToWidgetLifetime(this);
-
-                viewModel.ObservePath(x => x.Entry).Subscribe(val =>
-                {
-                    validatedEntry.Text = val;
-                    entryRepeatLabel.Text = val;
-                }).AttachToWidgetLifetime(this);
+                counterLabel.Bind(x => x.Text, viewModel, x => x.Text);
+                validatedEntry.Bind(x => x.Text, viewModel, x => x.Entry);
+                entryRepeatLabel.Bind(x => x.Text, viewModel, x => x.Entry);
 
                 validatedEntry.ObservePath(x => x.Text)
                     .Subscribe(val => viewModel.Entry = val)
@@ -47,9 +41,10 @@ namespace GtkSharp.Mvvm.Sample
                 plus.BindCommand(viewModel, x => x.IncrementCounter);
                 minus.BindCommand(viewModel, x => x.DecrementCounter);
 
-                viewModel.ObservePath(x => x.GetErrors(nameof(viewModel.Entry)))
-                    .Subscribe(val => errorInfoLabel.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>")
-                    .AttachToWidgetLifetime(this);
+                errorInfoLabel.Bind(
+                    viewModel,
+                    x => x.GetErrors(nameof(viewModel.Entry)),
+                    (val, w) => w.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>");
 
                 #endregion
             }
