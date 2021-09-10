@@ -3,7 +3,7 @@ using System.Windows.Input;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class CanExecuteChangedObservable : ObservableBase<bool>
+    internal sealed class CanExecuteChangedObservable : ObservableBase<bool>
     {
         private readonly ICommand command;
 

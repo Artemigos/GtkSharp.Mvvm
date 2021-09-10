@@ -4,8 +4,9 @@ using System.ComponentModel;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Windows.Input;
+using GtkSharp.Mvvm.Observable;
 
-namespace GtkSharp.Mvvm.Observable
+namespace GtkSharp.Mvvm
 {
     public static class ObservableExtensions
     {

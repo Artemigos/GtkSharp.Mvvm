@@ -2,7 +2,7 @@ using System;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class GlibNotificationObservable<TSource, TResult> : ObservableBase<TResult>
+    internal sealed class GlibNotificationObservable<TSource, TResult> : ObservableBase<TResult>
         where TSource : GLib.Object
     {
         private readonly TSource source;

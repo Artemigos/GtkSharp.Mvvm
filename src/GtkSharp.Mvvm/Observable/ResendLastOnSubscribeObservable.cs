@@ -2,7 +2,7 @@ using System;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class ResendLastOnSubscribeObservable<TResult> : ObservableBase<TResult>, IObserver<TResult>
+    internal sealed class ResendLastOnSubscribeObservable<TResult> : ObservableBase<TResult>, IObserver<TResult>
     {
         private readonly IObservable<TResult> source;
         private TResult lastResult;

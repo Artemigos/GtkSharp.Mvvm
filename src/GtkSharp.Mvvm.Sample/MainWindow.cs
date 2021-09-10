@@ -3,8 +3,6 @@ using System.Collections;
 using System.ComponentModel;
 using System.Linq;
 using Gtk;
-using GtkSharp.Mvvm.Bindings.Attempt3;
-using GtkSharp.Mvvm.Observable;
 
 namespace GtkSharp.Mvvm.Sample
 {

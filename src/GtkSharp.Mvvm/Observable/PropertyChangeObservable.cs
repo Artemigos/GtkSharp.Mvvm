@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class PropertyChangeObservable<TSource, TResult> : ObservableBase<TResult>
+    internal sealed class PropertyChangeObservable<TSource, TResult> : ObservableBase<TResult>
         where TSource : INotifyPropertyChanged
     {
         private readonly TSource source;

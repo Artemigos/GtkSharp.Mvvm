@@ -2,7 +2,7 @@ using System;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class DelegatedObserver<TItem> : IObserver<TItem>
+    internal sealed class DelegatedObserver<TItem> : IObserver<TItem>
     {
         private readonly Action<TItem> onNext;
         private readonly Action<Exception> onError;

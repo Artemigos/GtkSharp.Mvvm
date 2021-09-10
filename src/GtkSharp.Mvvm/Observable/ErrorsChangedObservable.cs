@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal class ErrorsChangedObservable<TSource> : ObservableBase<IEnumerable>
+    internal sealed class ErrorsChangedObservable<TSource> : ObservableBase<IEnumerable>
         where TSource : INotifyDataErrorInfo
     {
         private readonly TSource source;

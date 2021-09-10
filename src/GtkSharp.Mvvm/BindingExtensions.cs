@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using GtkSharp.Mvvm.Observable;
+using GtkSharp.Mvvm.Bindings;
 
-namespace GtkSharp.Mvvm.Bindings.Attempt3
+namespace GtkSharp.Mvvm
 {
     public static class BindingExtensions
     {
