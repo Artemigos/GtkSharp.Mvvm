@@ -23,6 +23,11 @@ namespace GtkSharp.Mvvm.Bindings
 
         protected MethodInfo FindMethodOnInterface(Type implementation, Type @interface, MethodInfo method)
         {
+            if (implementation == @interface)
+            {
+                return method;
+            }
+
             var map = implementation.GetInterfaceMap(@interface);
             for (int i = 0; i < map.TargetMethods.Length; ++i)
             {

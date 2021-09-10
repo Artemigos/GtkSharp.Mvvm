@@ -153,7 +153,7 @@ namespace GtkSharp.Mvvm
             return new SelectManyFromLatestObservable<TSource, TResult>(source, selector);
         }
 
-        public static IObservable<T> ResendLastOnSubscribe<T>(this IObservable<T> source, T initialValue = default)
+        public static IValueObservable<T> ResendLastOnSubscribe<T>(this IObservable<T> source, T initialValue = default)
         {
             if (source is null)
             {

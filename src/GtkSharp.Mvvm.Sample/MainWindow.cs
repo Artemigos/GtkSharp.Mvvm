@@ -44,27 +44,8 @@ namespace GtkSharp.Mvvm.Sample
                     .Subscribe(val => viewModel.Entry = val)
                     .AttachToWidgetLifetime(this);
 
-                viewModel.ObservePath(x => x.IncrementCounter.CanExecute(null))
-                    .Subscribe(val => plus.Sensitive = val)
-                    .AttachToWidgetLifetime(this);
-
-                plus.Clicked += (_, _) =>
-                {
-                    var cmd = viewModel.IncrementCounter;
-                    if (cmd.CanExecute(null))
-                        cmd.Execute(null);
-                };
-
-                viewModel.ObservePath(x => x.DecrementCounter.CanExecute(null))
-                    .Subscribe(val => minus.Sensitive = val)
-                    .AttachToWidgetLifetime(this);
-
-                minus.Clicked += (_, _) =>
-                {
-                    var cmd = viewModel.DecrementCounter;
-                    if (cmd.CanExecute(null))
-                        cmd.Execute(null);
-                };
+                plus.BindCommand(viewModel, x => x.IncrementCounter);
+                minus.BindCommand(viewModel, x => x.DecrementCounter);
 
                 viewModel.ObservePath(x => x.GetErrors(nameof(viewModel.Entry)))
                     .Subscribe(val => errorInfoLabel.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>")

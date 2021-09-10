@@ -2,11 +2,13 @@ using System;
 
 namespace GtkSharp.Mvvm.Observable
 {
-    internal sealed class ResendLastOnSubscribeObservable<TResult> : ObservableBase<TResult>, IObserver<TResult>
+    internal sealed class ResendLastOnSubscribeObservable<TResult> : ObservableBase<TResult>, IObserver<TResult>, IValueObservable<TResult>
     {
         private readonly IObservable<TResult> source;
         private TResult lastResult;
         private IDisposable subscription;
+
+        public TResult CurrentValue => lastResult;
 
         public ResendLastOnSubscribeObservable(IObservable<TResult> source, TResult initialValue)
         {
