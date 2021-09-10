@@ -96,6 +96,71 @@ namespace GtkSharp.Mvvm
                 .AttachToWidgetLifetime(widget);
         }
 
+        public static IDisposable BindBack<TWidget, TValue>(
+            this TWidget widget,
+            Expression<Func<TWidget, TValue>> selector,
+            Expression<Func<TValue>> targetSelector)
+            where TWidget : Gtk.Widget
+        {
+            if (widget is null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (targetSelector is null)
+            {
+                throw new ArgumentNullException(nameof(targetSelector));
+            }
+
+            if (targetSelector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            {
+                throw new ArgumentException("Only property expressions are supported.", nameof(targetSelector));
+            }
+
+            if (!prop.CanWrite)
+            {
+                throw new ArgumentException("The property doesn't have a setter.", nameof(targetSelector));
+            }
+
+            var par = Expression.Parameter(typeof(TValue));
+            var setter = Expression.Lambda<Action<TValue>>(
+                Expression.Assign(mem, par),
+                par).Compile();
+
+            return widget.BindBack(selector, setter);
+        }
+
+        public static IDisposable BindBack<TWidget, TValue>(
+            this TWidget widget,
+            Expression<Func<TWidget, TValue>> selector,
+            Action<TValue> handler)
+            where TWidget : Gtk.Widget
+        {
+            if (widget is null)
+            {
+                throw new ArgumentNullException(nameof(widget));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return widget
+                .ObservePath(selector)
+                .Subscribe(handler)
+                .AttachToWidgetLifetime(widget);
+        }
 
         public static IDisposable BindCommand<TSource>(
             this Button button,

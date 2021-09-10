@@ -33,14 +33,9 @@ namespace GtkSharp.Mvvm.Sample
                 counterLabel.Bind(x => x.Text, viewModel, x => x.Text);
                 validatedEntry.Bind(x => x.Text, viewModel, x => x.Entry);
                 entryRepeatLabel.Bind(x => x.Text, viewModel, x => x.Entry);
-
-                validatedEntry.ObservePath(x => x.Text)
-                    .Subscribe(val => viewModel.Entry = val)
-                    .AttachToWidgetLifetime(this);
-
+                validatedEntry.BindBack(x => x.Text, () => viewModel.Entry);
                 plus.BindCommand(viewModel, x => x.IncrementCounter);
                 minus.BindCommand(viewModel, x => x.DecrementCounter);
-
                 errorInfoLabel.Bind(
                     viewModel,
                     x => x.GetErrors(nameof(viewModel.Entry)),
