@@ -41,6 +41,15 @@ namespace GtkSharp.Mvvm.Sample
                     x => x.GetErrors(nameof(viewModel.Entry)),
                     (val, w) => w.Markup = "<span foreground='red'>" + string.Join("\n", val.Cast<string>()) + "</span>");
 
+                // simple API:
+                // someListBox.BindCollection(viewModel, x => x.Items, this.CreateItem);
+
+                // behind the scenes:
+                // viewModel.ObservePath(x => x.Items)
+                //     .TrackItemChanges()
+                //     .Subscribe(new ListBoxTrackingReceiver(someListBox))
+                //     .AttachToWigetLifetime(someListBox);
+
                 #endregion
             }
             else
