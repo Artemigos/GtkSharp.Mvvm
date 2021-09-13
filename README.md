@@ -74,8 +74,8 @@ entry.BindBack(
 
 ```csharp
 button.BindCommand(
-    vm,                  // view model instance
-    vm.Path.To.Command); // view model command path
+    vm,                      // view model instance
+    x => x.Path.To.Command); // view model command path
 ```
 
 ### Error info binding
@@ -98,14 +98,14 @@ label.Bind(
 
 ### Lower level API
 
-The library is based on `IObservable<>` and `IObserver<>`. When necessary, it's possible to use the extension method that expose those observable objects.
+The library is based on `IObservable<>` and `IObserver<>`. When necessary, it's possible to use the extension methods that expose those observable objects.
 
-- `vm.ObserveProperty(x => x.Path.To.Property)` - it returns an obserbale that can track a multi-level path with support for all the path features mentioned above. This is the core building block for the entire library.
+- `vm.ObserveProperty(x => x.Path.To.Property)` - it returns an observable that can track a multi-level path with support for all the path features mentioned above. This is the core building block for the entire library.
 - `propertyObservable.ObserveInnerProperty(x => x.Property)` - lets you drill down the property path, returns an observable, e.g.
 
   ```csharp
   vm.ObserveProperty(x => x.Path.To)
-      .ObeserveInnerProperty(x => x.Property);
+      .ObserveInnerProperty(x => x.Property);
   vm.ObserveProperty(x => x.Path.To.Command)
       .ObserveInnerProperty(x => x.CanExecute(null));
   ```
