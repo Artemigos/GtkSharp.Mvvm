@@ -164,6 +164,19 @@ namespace GtkSharp.Mvvm
                 .AttachToWidgetLifetime(widget);
         }
 
+        public static void RunIfCanExecute(this ICommand command, object parameter = null)
+        {
+            if (command is null)
+            {
+                throw new ArgumentNullException(nameof(command));
+            }
+
+            if (command.CanExecute(parameter))
+            {
+                command.Execute(parameter);
+            }
+        }
+
         public static IDisposable BindCommand<TSource>(
             this Button button,
             TSource source,
@@ -190,15 +203,7 @@ namespace GtkSharp.Mvvm
                 .ObserveInnerProperty(x => x.CanExecute(null))
                 .Subscribe(val => button.Sensitive = val);
 
-            EventHandler handler = (sender, args) =>
-            {
-                var cmd = commandObervable.CurrentValue;
-                if (cmd.CanExecute(null))
-                {
-                    cmd.Execute(null);
-                }
-            };
-
+            EventHandler handler = (sender, args) => commandObervable.CurrentValue?.RunIfCanExecute();
             button.Clicked += handler;
             return new Disposable(() =>
             {
