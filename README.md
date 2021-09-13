@@ -1,6 +1,6 @@
 # GtkSharp.Mvvm
 
-![nuget](https://img.shields.io/nuget/v/GtkSharp.Mvvm?style=flat-square)
+[![nuget](https://img.shields.io/nuget/v/GtkSharp.Mvvm?style=flat-square)](https://www.nuget.org/packages/GtkSharp.Mvvm/)
 
 Base tools for using the MVVM pattern with GtkSharp. The goal is to provide easy to use methods, that allow binding your typical view models to the GtkSharp views.
 
@@ -24,6 +24,7 @@ Currently supported:
 Planned support:
 
 - `IObservableCollection`
+- command parameters
 - **maybe** multi-bindings - this can be achieved with [Reactive Extensions] and `CombineLatest` and I'm not sure I want to reimplement that
 
 ## Installing
