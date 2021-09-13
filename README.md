@@ -12,7 +12,14 @@ Currently supported:
 - `glib`'s property change tracking
 - `ICommand` binding with `CanExecute` tracking
 - `INotifyDataErrorInfo`
-- long property paths, e.g. `label.Bind(x => x.Text, vm, x => x.Property.Inner.GetErrors("ValidatedProperty");`
+- long property paths, e.g.
+
+  ```csharp
+  label.Bind(
+      x => x.Text,
+      vm,
+      x => x.Property.Inner.GetErrors("ValidatedProperty");
+  ```
 
 Planned support:
 
