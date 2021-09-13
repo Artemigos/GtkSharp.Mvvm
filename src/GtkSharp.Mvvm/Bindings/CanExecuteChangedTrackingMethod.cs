@@ -14,7 +14,7 @@ namespace GtkSharp.Mvvm.Bindings
                 return false;
             }
 
-            if (expression is not MethodCallExpression  mem)
+            if (!(expression is MethodCallExpression  mem))
             {
                 return false;
             }
@@ -31,7 +31,7 @@ namespace GtkSharp.Mvvm.Bindings
             }
 
             var nameArg = mem.Arguments[0];
-            if (nameArg is not ConstantExpression { Value: null })
+            if (!(nameArg is ConstantExpression con) || con.Value != null)
             {
                 return false;
             }

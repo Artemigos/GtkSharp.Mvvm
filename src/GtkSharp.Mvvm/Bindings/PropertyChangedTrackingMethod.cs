@@ -15,7 +15,7 @@ namespace GtkSharp.Mvvm.Bindings
                 return false;
             }
 
-            if (expression is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(expression is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 return false;
             }

@@ -18,6 +18,7 @@ namespace GtkSharp.Mvvm
             Expression<Func<TWidget, TValue>> widgetPropSelector,
             TSource source,
             Expression<Func<TSource, TValue>> selector)
+            where TSource : class
             where TWidget : Gtk.Widget
         {
             if (widget is null)
@@ -40,7 +41,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            if (widgetPropSelector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(widgetPropSelector.Body is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 throw new ArgumentException("Only simple property expressions are supported.", nameof(widgetPropSelector));
             }
@@ -50,7 +51,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentException("The property doesn't have a setter.", nameof(widgetPropSelector));
             }
 
-            if (mem.Expression is not ParameterExpression widg)
+            if (!(mem.Expression is ParameterExpression widg))
             {
                 throw new ArgumentException("Only simple property expressions are supported.", nameof(widgetPropSelector));
             }
@@ -68,6 +69,7 @@ namespace GtkSharp.Mvvm
             TSource source,
             Expression<Func<TSource, TValue>> selector,
             Action<TValue, TWidget> handler)
+            where TSource : class
             where TWidget : Gtk.Widget
         {
             if (widget is null)
@@ -117,7 +119,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(targetSelector));
             }
 
-            if (targetSelector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(targetSelector.Body is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 throw new ArgumentException("Only property expressions are supported.", nameof(targetSelector));
             }
@@ -166,6 +168,7 @@ namespace GtkSharp.Mvvm
             this Button button,
             TSource source,
             Expression<Func<TSource, ICommand>> commandSelector)
+            where TSource : class
         {
             if (button is null)
             {
@@ -219,7 +222,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            method ??= FindTrackingMethod(selector.Body);
+            method = method ?? FindTrackingMethod(selector.Body);
             return source
                 .SelectManyFromLatest(x => PropertyObserverSelector<TSource, TResult>(x, selector, method))
                 .ResendLastOnSubscribe(default);
@@ -236,6 +239,7 @@ namespace GtkSharp.Mvvm
         public static IValueObservable<TValue> ObservePath<TSource, TValue>(
             this TSource source,
             Expression<Func<TSource, TValue>> selector)
+            where TSource : class
         {
             if (source is null)
             {
@@ -261,7 +265,7 @@ namespace GtkSharp.Mvvm
                 methods.Add((method, currentExpr));
                 currentExpr = method.GetInnerExpression(currentExpr);
             }
-            while (currentExpr is not ParameterExpression);
+            while (!(currentExpr is ParameterExpression));
 
             methods.Reverse();
             var wrapped = Expression.Lambda(methods[0].expr, (ParameterExpression)currentExpr);

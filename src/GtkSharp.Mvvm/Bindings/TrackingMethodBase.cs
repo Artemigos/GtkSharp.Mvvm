@@ -31,7 +31,17 @@ namespace GtkSharp.Mvvm.Bindings
             var map = implementation.GetInterfaceMap(@interface);
             for (int i = 0; i < map.TargetMethods.Length; ++i)
             {
-                if (method.HasSameMetadataDefinitionAs(map.TargetMethods[i]))
+                var comparedMethod = map.TargetMethods[i];
+                if (comparedMethod.ReflectedType != method.ReflectedType)
+                {
+                    // This is relevant when the method is implemented on a base type and not overriden.
+                    // The `GetInterfaceMap` call finds it through the `implementation` type, while
+                    // the expressions give the method directly for the base type that has the method.
+                    // As a result method comparison fails, even though in practice they are the same methods.
+                    comparedMethod = comparedMethod.GetBaseDefinition();
+                }
+
+                if (method == comparedMethod)
                 {
                     return map.InterfaceMethods[i];
                 }

@@ -6,8 +6,8 @@ namespace GtkSharp.Mvvm.Observable
 {
     internal abstract class ObservableBase<TResult> : IObservable<TResult>
     {
-        private readonly object lck = new();
-        private readonly List<IObserver<TResult>> observers = new();
+        private readonly object lck = new object();
+        private readonly List<IObserver<TResult>> observers = new List<IObserver<TResult>>();
 
         public IDisposable Subscribe(IObserver<TResult> observer)
         {

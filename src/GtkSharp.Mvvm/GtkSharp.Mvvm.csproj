@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageId>GtkSharp.Mvvm</PackageId>
-    <Version>0.1.0-alpha</Version>
+    <Version>0.1.1-alpha</Version>
     <Authors>artemigos</Authors>
     <Description>Implementation of the MVVM pattern for GtkSharp base applications. Allows to bind to data, commands and errors from view models.</Description>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>

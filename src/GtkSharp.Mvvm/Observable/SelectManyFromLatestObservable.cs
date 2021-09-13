@@ -9,7 +9,7 @@ namespace GtkSharp.Mvvm.Observable
         private readonly Func<TSource, IObservable<TResult>> selector;
         private IObservable<TResult> lastObservable;
         private IDisposable lastObservableSubscription;
-        private readonly object lck = new();
+        private readonly object lck = new object();
         private readonly _ forwarder;
 
         public SelectManyFromLatestObservable(IObservable<TSource> source, Func<TSource, IObservable<TResult>> selector)

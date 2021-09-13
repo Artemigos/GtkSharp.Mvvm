@@ -39,7 +39,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            if (selector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(selector.Body is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 throw new ArgumentException("Only property selectors are supported.", nameof(selector));
             }
@@ -49,7 +49,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentException("The property does not have a getter.", nameof(selector));
             }
 
-            if (mem.Expression is not ParameterExpression)
+            if (!(mem.Expression is ParameterExpression))
             {
                 throw new ArgumentException("The property should be selected directly from the parameter.", nameof(selector));
             }
@@ -78,7 +78,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            if (selector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(selector.Body is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 throw new ArgumentException("Only property selectors are supported.", nameof(selector));
             }
@@ -88,7 +88,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentException("The property does not have a getter.", nameof(selector));
             }
 
-            if (mem.Expression is not ParameterExpression)
+            if (!(mem.Expression is ParameterExpression))
             {
                 throw new ArgumentException("The property should be selected directly from the parameter.", nameof(selector));
             }
@@ -111,7 +111,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            if (selector.Body is not MemberExpression { Member: PropertyInfo prop } mem)
+            if (!(selector.Body is MemberExpression mem) || !(mem.Member is PropertyInfo prop))
             {
                 throw new ArgumentException("Only property selectors are supported.", nameof(selector));
             }
@@ -121,7 +121,7 @@ namespace GtkSharp.Mvvm
                 throw new ArgumentException("The property does not have a getter.", nameof(selector));
             }
 
-            if (mem.Expression is not ParameterExpression)
+            if (!(mem.Expression is ParameterExpression))
             {
                 throw new ArgumentException("The property should be selected directly from the parameter.", nameof(selector));
             }
